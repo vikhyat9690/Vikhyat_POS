@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="customer_account" />
+    <head>
+        <css src="Magento_Backend::styles.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Vikhyat\BlogManager\Block\ProductGrid" name="vikhyat.blog.list" template="Vikhyat_BlogManager::productlist.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

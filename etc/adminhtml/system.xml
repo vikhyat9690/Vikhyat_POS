@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="vikhyat" translate="label" sortOrder="300">
+            <label>Vikhyat POS</label>
+        </tab>
+        <section id="vikhyat" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>JWT Configuration</label>
+            <tab>vikhyat</tab>
+            <resource>Vikhyat_BlogManager::config</resource>
+            <group id="jwt" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>JWT Settings</label>
+                <field id="secret_key" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>JWT Secret Key</label>
+                    <comment>Secret key used for JWT token signing. Leave empty to auto-generate.</comment>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                </field>
+                <field id="expiry_time" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Token Expiry Time (seconds)</label>
+                    <comment>Default expiry time for JWT tokens in seconds. Default: 3600 (1 hour)</comment>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                </field>
+                <field id="refresh_expiry_time" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Refresh Token Expiry Time (seconds)</label>
+                    <comment>Expiry time for refresh tokens in seconds. Default: 604800 (7 days)</comment>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

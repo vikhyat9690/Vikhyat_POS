@@ -1,0 +1,17 @@
+{
+  "name": "vikhyat/blogmanager",
+  "description": "Custom Admin Menu with Icon",
+  "require": {
+    "php": "^7.4 || ^8.1",
+    "magento/framework": "*"
+  },
+  "type": "magento2-module",
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Vikhyat\\BlogManager\\": ""
+    }
+  }
+}

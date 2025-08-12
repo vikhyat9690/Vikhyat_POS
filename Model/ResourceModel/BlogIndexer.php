@@ -1,0 +1,12 @@
+<?php
+namespace Vikhyat\BlogManager\Model\ResourceModel;
+
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+
+class BlogIndexer extends AbstractDb
+{
+    protected function _construct()
+    {
+        $this->_init('vikhyat_blog_indexer', 'entity_id');
+    }
+}

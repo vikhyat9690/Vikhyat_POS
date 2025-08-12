@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Mview/etc/mview.xsd">
+    <view id="vikhyat_blog_indexer" class="Vikhyat\BlogManager\Model\Indexer\BlogIndexer" group="indexer">
+        <subscriptions>
+         <table name="vikhyat_blog" entity_column="blog_id" />
+         <table name="customer_entity" entity_column="entity_id" />
+        </subscriptions>
+    </view>
+</config>

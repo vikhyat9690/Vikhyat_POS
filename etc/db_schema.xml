@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * BlogManager - Blog Table Schema
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <table name="vikhyat_blog" resource="default" engine="innodb" comment="Vikhyat Blog Table">
+        <column name="blog_id" xsi:type="int" unsigned="true" nullable="false" identity="true" comment="Blog ID"/>
+        <column name="title" xsi:type="varchar" length="255" nullable="false" comment="Title"/>
+        <column name="content" xsi:type="text" nullable="false" comment="Content"/>
+        <column name="is_active" xsi:type="smallint" nullable="false" default="1" comment="Is Active"/>
+        <column name="created_at" xsi:type="timestamp" on_update="false" default="CURRENT_TIMESTAMP" nullable="false" comment="Created At"/>
+        <column name="updated_at" xsi:type="timestamp" on_update="true" default="CURRENT_TIMESTAMP" nullable="false" comment="Updated At"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="blog_id"/>
+        </constraint>
+    </table>
+
+    <table name="vikhyat_blog_indexer" resource="default" engine="innodb" comment="Vikhyat Indexer Table">
+        <column name="entity_id" xsi:type="int" unsigned="true" nullable="false" identity="true" />
+        <column name="customer_id" xsi:type="int" unsigned="true" nullable="false" />
+        <column name="customer_name" xsi:type="varchar" length="255" nullable="false" comment="Name" />
+        <column name="email" xsi:type="varchar" length="255" nullable="false" comment="Product Sku" />
+        <column name="shipping_full" xsi:type="text" nullable="false" comment="Product Sku" />
+        <column name="billing_full" xsi:type="text" nullable="false" comment="Product Sku" />
+        <column name="created_at" xsi:type="timestamp" on_update="false" default="CURRENT_TIMESTAMP" nullable="false" comment="Created At" />
+        <column name="updated_at" xsi:type="timestamp" on_update="true" default="CURRENT_TIMESTAMP" nullable="false" comment="Updated At" />
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id" />
+        </constraint>
+    </table>
+
+    <table name="vikhyat_outlet" resource="default" engine="innodb" comment="Vikhyat Outlet Table">
+        <column name="entity_id" xsi:type="int" unsigned="true" nullable="false" identity="true" />
+        <column name="source" xsi:type="varchar" length="255" nullable="false" comment="Source" />
+        <column name="email" xsi:type="varchar" length="255" nullable="false" comment="Email" />
+        <column name="outlet_image" xsi:type="text" nullable="false" comment="Outlet image url" />
+        <column name="owner_name" xsi:type="varchar" length="255" nullable="false" comment="Owner" />
+        <column name="website_id" xsi:type="int" unsigned="true" nullable="false" comment="Website" />
+        <column name="stock_id" xsi:type="int" unsigned="true" nullable="false" comment="Stock" />
+        <column name="street_line_1" xsi:type="text" nullable="false" comment="Street line 1" />
+        <column name="stree_line_2" xsi:type="text" nullable="true" comment="Street line 2" />
+        <column name="city" xsi:type="varchar" length="255" nullable="false" comment="City" />
+        <column name="region" xsi:type="varchar" length="255" nullable="false" comment="Region/State" />
+        <column name="country" xsi:type="varchar" length="255" nullable="false" comment="Country" />
+        <column name="is_active" xsi:type="int" unsigned="true" nullable="false" comment="Is Active" />
+        <column name="created_at" xsi:type="timestamp" on_update="false" default="CURRENT_TIMESTAMP" nullable="false" comment="Created At" />
+        <column name="updated_at" xsi:type="timestamp" on_update="true" default="CURRENT_TIMESTAMP" nullable="false" comment="Updated At" />
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id" />
+        </constraint>
+    </table>
+
+    <table name="vikhyat_cashier" resource="default" engine="innodb" comment="Vikhyat Cashier Table">
+        <column name="entity_id" xsi:type="int" unsigned="true" nullable="false" identity="true" />
+        <column name="firstname" xsi:type="varchar" length="255" nullable="false" comment="firstname" />
+        <column name="lastname" xsi:type="varchar" length="255" nullable="false" comment="lastname" />
+        <column name="cashier_image" xsi:type="text" nullable="false" comment="cashier image url" />
+        <column name="email" xsi:type="varchar" length="255" nullable="false" comment="email" />
+        <column name="telephone" xsi:type="varchar" length="255" nullable="false" comment="Phone number" />
+        <column name="password" xsi:type="varchar" nullable="true" comment="Password Hash" />
+        <column name="is_active" xsi:type="int" unsigned="true" nullable="false" comment="Is Active" />
+        <column name="outlet_id" xsi:type="int" unsigned="true" nullable="false" comment="Outlet Assigned" />
+        <column name="created_at" xsi:type="timestamp" on_update="false" default="CURRENT_TIMESTAMP" nullable="false" comment="Created At" />
+        <column name="updated_at" xsi:type="timestamp" on_update="true" default="CURRENT_TIMESTAMP" nullable="false" comment="Updated At" />
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id" />
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="OUTLET_OUTLET_ID_VIKHYAT_OUTLET_ID" table="vikhyat_cashier" column="outlet_id" referenceTable="vikhyat_outlet" referenceColumn="entity_id"/>
+    </table>
+</schema>

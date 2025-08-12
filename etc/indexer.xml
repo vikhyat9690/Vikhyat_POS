@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Indexer/etc/indexer.xsd">
+    <indexer id="vikhyat_blog_indexer" view_id="vikhyat_blog_indexer" class="Vikhyat\BlogManager\Model\Indexer\BlogIndexer" >
+        <title>Vikhyat Blog Indexer</title>
+        <description>This indexer is made for optimised data retreival</description>
+    </indexer>
+</config>

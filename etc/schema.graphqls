@@ -1,0 +1,18 @@
+type Query {
+    getOutletConfigData(id: Int!): OutletConfigData @resolver(class: "Vikhyat\\BlogManager\\Model\\Resolver\\Outlet\\OutletConfigData")
+}
+
+type OutletConfigData {
+    id: Int
+    name: String
+    source: String
+    email: String
+    city: String
+    region: String
+    country: String
+    street_line_1: String
+    street_line_2: String
+    is_active: Int
+    website_id: Int
+    created_at: String
+}

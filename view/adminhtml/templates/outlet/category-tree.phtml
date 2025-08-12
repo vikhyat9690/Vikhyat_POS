@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magento Category Tree</title>
+    <style>
+        body {
+            font-family: 'Open Sans', Arial, sans-serif;
+            margin: 20px;
+            background-color: #f8f8f8;
+        }
+
+        .category-tree-container {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            max-width: 500px;
+        }
+
+        .tree-header {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tree-actions {
+            font-size: 13px;
+        }
+
+        .tree-actions a {
+            color: #007bdb;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        .tree-actions a:hover {
+            text-decoration: underline;
+        }
+
+        .category-tree {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .category-item {
+            margin: 0;
+            padding: 0;
+        }
+
+        .category-content {
+            display: flex;
+            align-items: center;
+            padding: 3px 0;
+            line-height: 20px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .tree-connector {
+            width: 20px;
+            height: 20px;
+            margin-right: 2px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .tree-connector::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: -10px;
+            bottom: 10px;
+            width: 1px;
+            background: #ccc;
+        }
+
+        .tree-connector::after {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 10px;
+            width: 12px;
+            height: 1px;
+            background: #ccc;
+        }
+
+        .category-item:last-child > .category-content > .tree-connector::before {
+            bottom: 50%;
+        }
+
+        .expand-toggle {
+            width: 16px;
+            height: 16px;
+            margin-right: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #666;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        .expand-toggle:hover {
+            background-color: #f0f0f0;
+        }
+
+        .expand-toggle.expandable::before {
+            content: '+';
+            font-weight: bold;
+        }
+
+        .expand-toggle.expanded::before {
+            content: '−';
+            font-weight: bold;
+        }
+
+        .category-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 6px;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAFYSURBVDiNpZM9SwNBEIafgwQLwcJCG1sLwcZCG9vYaGOjjY02NtrYaGOjjY02NtrYaGOjjY02NtrYaGOjjY02NtrYaGOjjY02NtrYaGOjjY02NtrYaGOjjY02NtrYaGOjjY02NtrYaGOjjY02NtrYaGOjjY02NtrYaGOjjbaWFlpYaGGhhYUWFlpYaGGhhYUWFlpYaGGhhYUWFlpYaGGhhYUWFlpYaGGhhYUWFlpYaGGhhYUWFlpYaGGhhYUWFlpYaGGhhYUWFlpYaGGhhYUWFlpYaGGhhYUWFlpYaGGhhYUWFlpYaGGhWFhYaGGhhYUWFlpYaGGhhYUWFlpYaGGhhYUWFlpYaGGhhYUWFlpYaGGhhYUWFlpYaGGhhYUWFlpYaGGhhYUWFlpYaGGhhYUWFlpYaGGhhYUWFlpYaGGhhYUWFlpYaGGhhYUWFlpYaGGhhYUWFlpYaGGhhYUWFlpYaGGhhYVi8Q8jNJnHKkDPwAAAABJRU5ErkJggg==');
+            background-size: contain;
+            flex-shrink: 0;
+        }
+
+        .category-checkbox {
+            margin-right: 6px;
+            flex-shrink: 0;
+        }
+
+        .category-label {
+            cursor: pointer;
+            flex-grow: 1;
+        }
+
+        .category-label:hover {
+            color: #007bdb;
+        }
+
+        .category-count {
+            margin-left: 4px;
+            color: #666;
+        }
+
+        .category-children {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            margin-left: 20px;
+            display: none;
+        }
+
+        .category-children.expanded {
+            display: block;
+        }
+
+        .root-category > .category-content > .tree-connector {
+            display: none;
+        }
+
+        .disabled {
+            color: #999;
+        }
+
+        .disabled .category-label {
+            cursor: default;
+        }
+
+        .disabled .category-label:hover {
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="category-tree-container">
+        <div class="tree-header">
+            <div class="tree-actions">
+                <a href="#" id="collapseAll">Collapse All</a> |
+                <a href="#" id="expandAll">Expand All</a>
+            </div>
+        </div>
+        
+        <ul class="category-tree" id="categoryTree">
+            <li class="category-item root-category">
+                <div class="category-content">
+                    <div class="tree-connector"></div>
+                    <div class="expand-toggle expandable" data-category-id="2"></div>
+                    <div class="category-icon"></div>
+                    <input type="checkbox" class="category-checkbox" id="cat-2" value="2">
+                    <label for="cat-2" class="category-label">Default Category (ID: 2) <span class="category-count">(1181)</span></label>
+                </div>
+                <ul class="category-children" id="children-2">
+                    <li class="category-item">
+                        <div class="category-content">
+                            <div class="tree-connector"></div>
+                            <div class="expand-toggle" data-category-id="38"></div>
+                            <div class="category-icon"></div>
+                            <input type="checkbox" class="category-checkbox" id="cat-38" value="38">
+                            <label for="cat-38" class="category-label">What's New (ID: 38) <span class="category-count">(0)</span></label>
+                        </div>
+                    </li>
+                    
+                    <li class="category-item">
+                        <div class="category-content">
+                            <div class="tree-connector"></div>
+                            <div class="expand-toggle" data-category-id="20"></div>
+                            <div class="category-icon"></div>
+                            <input type="checkbox" class="category-checkbox" id="cat-20" value="20">
+                            <label for="cat-20" class="category-label">Women (ID: 20) <span class="category-count">(0)</span></label>
+                        </div>
+                    </li>
+                    
+                    <li class="category-item">
+                        <div class="category-content">
+                            <div class="tree-connector"></div>
+                            <div class="expand-toggle" data-category-id="11"></div>
+                            <div class="category-icon"></div>
+                            <input type="checkbox" class="category-checkbox" id="cat-11" value="11">
+                            <label for="cat-11" class="category-label">Men (ID: 11) <span class="category-count">(0)</span></label>
+                        </div>
+                    </li>
+                    
+                    <li class="category-item">
+                        <div class="category-content">
+                            <div class="tree-connector"></div>
+                            <div class="expand-toggle expandable" data-category-id="3"></div>
+                            <div class="category-icon"></div>
+                            <input type="checkbox" class="category-checkbox" id="cat-3" value="3">
+                            <label for="cat-3" class="category-label">Gear (ID: 3) <span class="category-count">(46)</span></label>
+                        </div>
+                        <ul class="category-children" id="children-3">
+                            <li class="category-item">
+                                <div class="category-content">
+                                    <div class="tree-connector"></div>
+                                    <div class="expand-toggle" data-category-id="31"></div>
+                                    <div class="category-icon"></div>
+                                    <input type="checkbox" class="category-checkbox" id="cat-31" value="31">
+                                    <label for="cat-31" class="category-label">Bags (ID: 31) <span class="category-count">(12)</span></label>
+                                </div>
+                            </li>
+                            <li class="category-item">
+                                <div class="category-content">
+                                    <div class="tree-connector"></div>
+                                    <div class="expand-toggle" data-category-id="32"></div>
+                                    <div class="category-icon"></div>
+                                    <input type="checkbox" class="category-checkbox" id="cat-32" value="32">
+                                    <label for="cat-32" class="category-label">Fitness Equipment (ID: 32) <span class="category-count">(26)</span></label>
+                                </div>
+                            </li>
+                            <li class="category-item">
+                                <div class="category-content">
+                                    <div class="tree-connector"></div>
+                                    <div class="expand-toggle" data-category-id="33"></div>
+                                    <div class="category-icon"></div>
+                                    <input type="checkbox" class="category-checkbox" id="cat-33" value="33">
+                                    <label for="cat-33" class="category-label">Watches (ID: 33) <span class="category-count">(8)</span></label>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <li class="category-item">
+                        <div class="category-content">
+                            <div class="tree-connector"></div>
+                            <div class="expand-toggle" data-category-id="9"></div>
+                            <div class="category-icon"></div>
+                            <input type="checkbox" class="category-checkbox" id="cat-9" value="9">
+                            <label for="cat-9" class="category-label">Training (ID: 9) <span class="category-count">(0)</span></label>
+                        </div>
+                    </li>
+                    
+                    <li class="category-item disabled">
+                        <div class="category-content">
+                            <div class="tree-connector"></div>
+                            <div class="expand-toggle expandable" data-category-id="7"></div>
+                            <div class="category-icon"></div>
+                            <input type="checkbox" class="category-checkbox" id="cat-7" value="7" disabled>
+                            <label for="cat-7" class="category-label">Collections (ID: 7) <span class="category-count">(13)</span></label>
+                        </div>
+                        <ul class="category-children" id="children-7">
+                            <li class="category-item disabled">
+                                <div class="category-content">
+                                    <div class="tree-connector"></div>
+                                    <div class="expand-toggle" data-category-id="71"></div>
+                                    <div class="category-icon"></div>
+                                    <input type="checkbox" class="category-checkbox" id="cat-71" value="71" disabled>
+                                    <label for="cat-71" class="category-label">Performance Fabrics (ID: 71) <span class="category-count">(9)</span></label>
+                                </div>
+                            </li>
+                            <li class="category-item disabled">
+                                <div class="category-content">
+                                    <div class="tree-connector"></div>
+                                    <div class="expand-toggle" data-category-id="72"></div>
+                                    <div class="category-icon"></div>
+                                    <input type="checkbox" class="category-checkbox" id="cat-72" value="72" disabled>
+                                    <label for="cat-72" class="category-label">Eco Friendly (ID: 72) <span class="category-count">(4)</span></label>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <li class="category-item disabled">
+                        <div class="category-content">
+                            <div class="tree-connector"></div>
+                            <div class="expand-toggle" data-category-id="29"></div>
+                            <div class="category-icon"></div>
+                            <input type="checkbox" class="category-checkbox" id="cat-29" value="29" disabled>
+                            <label for="cat-29" class="category-label">Promotions (ID: 29) <span class="category-count">(0)</span></label>
+                        </div>
+                    </li>
+                    
+                    <li class="category-item">
+                        <div class="category-content">
+                            <div class="tree-connector"></div>
+                            <div class="expand-toggle" data-category-id="37"></div>
+                            <div class="category-icon"></div>
+                            <input type="checkbox" class="category-checkbox" id="cat-37" value="37">
+                            <label for="cat-37" class="category-label">Sale (ID: 37) <span class="category-count">(0)</span></label>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        class CategoryTree {
+            constructor(containerId) {
+                this.container = document.getElementById(containerId);
+                this.init();
+            }
+
+            init() {
+                this.attachEventListeners();
+                this.initializeExpandToggleStates();
+            }
+
+            attachEventListeners() {
+                // Expand/collapse toggle functionality
+                this.container.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('expand-toggle')) {
+                        this.toggleCategory(e.target);
+                    }
+                });
+
+                // Checkbox change events
+                this.container.addEventListener('change', (e) => {
+                    if (e.target.classList.contains('category-checkbox')) {
+                        this.handleCheckboxChange(e.target);
+                    }
+                });
+
+                // Collapse All functionality
+                document.getElementById('collapseAll').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.collapseAll();
+                });
+
+                // Expand All functionality
+                document.getElementById('expandAll').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.expandAll();
+                });
+            }
+
+            initializeExpandToggleStates() {
+                const toggles = this.container.querySelectorAll('.expand-toggle');
+                toggles.forEach(toggle => {
+                    const categoryId = toggle.dataset.categoryId;
+                    const children = document.getElementById(`children-${categoryId}`);
+                    
+                    if (children && children.children.length > 0) {
+                        toggle.classList.add('expandable');
+                    }
+                });
+            }
+
+            toggleCategory(toggle) {
+                if (!toggle.classList.contains('expandable')) return;
+                
+                const categoryId = toggle.dataset.categoryId;
+                const children = document.getElementById(`children-${categoryId}`);
+                
+                if (!children) return;
+
+                if (children.classList.contains('expanded')) {
+                    this.collapseCategory(toggle, children);
+                } else {
+                    this.expandCategory(toggle, children);
+                }
+            }
+
+            expandCategory(toggle, children) {
+                toggle.classList.add('expanded');
+                children.classList.add('expanded');
+                children.style.display = 'block';
+            }
+
+            collapseCategory(toggle, children) {
+                toggle.classList.remove('expanded');
+                children.classList.remove('expanded');
+                children.style.display = 'none';
+                
+                // Also collapse any nested expanded categories
+                const nestedExpanded = children.querySelectorAll('.expand-toggle.expanded');
+                nestedExpanded.forEach(nestedToggle => {
+                    const nestedCategoryId = nestedToggle.dataset.categoryId;
+                    const nestedChildren = document.getElementById(`children-${nestedCategoryId}`);
+                    if (nestedChildren) {
+                        this.collapseCategory(nestedToggle, nestedChildren);
+                    }
+                });
+            }
+
+            expandAll() {
+                const expandableToggles = this.container.querySelectorAll('.expand-toggle.expandable:not(.expanded)');
+                expandableToggles.forEach(toggle => {
+                    const categoryId = toggle.dataset.categoryId;
+                    const children = document.getElementById(`children-${categoryId}`);
+                    if (children) {
+                        this.expandCategory(toggle, children);
+                    }
+                });
+            }
+
+            collapseAll() {
+                const expandedToggles = this.container.querySelectorAll('.expand-toggle.expanded');
+                expandedToggles.forEach(toggle => {
+                    const categoryId = toggle.dataset.categoryId;
+                    const children = document.getElementById(`children-${categoryId}`);
+                    if (children) {
+                        this.collapseCategory(toggle, children);
+                    }
+                });
+            }
+
+            handleCheckboxChange(checkbox) {
+                const categoryId = checkbox.value;
+                const isChecked = checkbox.checked;
+                
+                // Check/uncheck child categories
+                this.updateChildCategories(categoryId, isChecked);
+                
+                // Update parent category state
+                this.updateParentCategories(checkbox);
+                
+                // Log selected categories (for development)
+                this.logSelectedCategories();
+            }
+
+            updateChildCategories(categoryId, isChecked) {
+                const children = document.getElementById(`children-${categoryId}`);
+                if (!children) return;
+                
+                const childCheckboxes = children.querySelectorAll('.category-checkbox');
+                childCheckboxes.forEach(childCheckbox => {
+                    if (!childCheckbox.disabled) {
+                        childCheckbox.checked = isChecked;
+                        childCheckbox.indeterminate = false;
+                        
+                        // Recursively update nested children
+                        this.updateChildCategories(childCheckbox.value, isChecked);
+                    }
+                });
+            }
+
+            updateParentCategories(checkbox) {
+                const categoryItem = checkbox.closest('.category-item');
+                const parentChildren = categoryItem.parentElement;
+                
+                if (!parentChildren.classList.contains('category-children')) return;
+                
+                const parentCategoryId = parentChildren.id.replace('children-', '');
+                const parentCheckbox = document.getElementById(`cat-${parentCategoryId}`);
+                
+                if (!parentCheckbox || parentCheckbox.disabled) return;
+                
+                const siblingCheckboxes = parentChildren.querySelectorAll(':scope > .category-item > .category-content > .category-checkbox');
+                const checkedSiblings = Array.from(siblingCheckboxes).filter(cb => cb.checked && !cb.disabled);
+                const indeterminateSiblings = Array.from(siblingCheckboxes).filter(cb => cb.indeterminate && !cb.disabled);
+                const enabledSiblings = Array.from(siblingCheckboxes).filter(cb => !cb.disabled);
+                
+                if (checkedSiblings.length === enabledSiblings.length) {
+                    parentCheckbox.checked = true;
+                    parentCheckbox.indeterminate = false;
+                } else if (checkedSiblings.length > 0 || indeterminateSiblings.length > 0) {
+                    parentCheckbox.checked = false;
+                    parentCheckbox.indeterminate = true;
+                } else {
+                    parentCheckbox.checked = false;
+                    parentCheckbox.indeterminate = false;
+                }
+                
+                // Recursively update parent's parent
+                this.updateParentCategories(parentCheckbox);
+            }
+
+            logSelectedCategories() {
+                const selectedCategories = [];
+                const checkboxes = this.container.querySelectorAll('.category-checkbox:checked');
+                
+                checkboxes.forEach(checkbox => {
+                    const label = checkbox.nextElementSibling;
+                    selectedCategories.push({
+                        id: checkbox.value,
+                        name: label.textContent.trim()
+                    });
+                });
+                
+                console.log('Selected Categories:', selectedCategories);
+            }
+
+            getSelectedCategoryIds() {
+                const checkboxes = this.container.querySelectorAll('.category-checkbox:checked');
+                return Array.from(checkboxes).map(cb => cb.value);
+            }
+
+            selectCategories(categoryIds) {
+                // Clear all selections first
+                const allCheckboxes = this.container.querySelectorAll('.category-checkbox');
+                allCheckboxes.forEach(cb => {
+                    cb.checked = false;
+                    cb.indeterminate = false;
+                });
+                
+                // Select specified categories
+                categoryIds.forEach(id => {
+                    const checkbox = document.getElementById(`cat-${id}`);
+                    if (checkbox && !checkbox.disabled) {
+                        checkbox.checked = true;
+                        this.updateParentCategories(checkbox);
+                    }
+                });
+            }
+        }
+
+        // Initialize the category tree
+        const categoryTree = new CategoryTree('categoryTree');
+
+        // Example usage:
+        // categoryTree.selectCategories(['3', '31', '32']); // Pre-select some categories
+        // const selected = categoryTree.getSelectedCategoryIds(); // Get selected category IDs
+    </script>
+</body>
+</html>

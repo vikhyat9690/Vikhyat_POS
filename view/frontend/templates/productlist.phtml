@@ -1,0 +1,53 @@
+<?php
+
+/** @var \Magento\Framework\View\Element\Template $block */
+$collection = $block->getProductCollection()->getData();
+$filters = $block->getFilteredCollection();
+$columns = $block->getColumns();
+?>
+<style>
+.data-grid { border-collapse: collapse; width: 100%; border: 1px solid #ccc; background: #fff; }
+.data-grid-th th { background: #f1f1f1; padding: 10px; font-weight: bold; border-bottom: 1px solid #ccc; }
+.data-grid-td { padding: 10px; border-bottom: 1px solid #eee; }
+.data-row:nth-child(even) { background-color: #fafafa; }
+.admin__control-select,
+.admin__control-text {
+    padding: 6px 10px;
+    height: 32px;
+    border: 1px solid #adadad;
+    border-radius: 2px;
+    background: #fff;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+</style>
+
+<div class="admin__data-grid-wrap">
+    <table class=".data-grid">
+        <thead class="data-grid-th" >
+            <?php foreach ($columns as $key => $column) { ?>
+                <th class="data-grid-th">
+                    <?php if($key == 'entity_id') { ?>
+                    <?= $column['label'] ?>
+                    <select class="admin__control-select">
+                        <option value="select-all">Select All</option>
+                        <option value="deselect-all">Deselect All</option>
+                    </select>
+                    <?php }  else { ?>
+                    <?= $column['label'] ?>
+                    <?php } ?>
+                </th>
+            <?php } ?>
+        </thead>
+        <tbody class="data-grid-tbody">
+            <?php foreach ($collection as $product) { ?>
+                <tr class="data-row">
+                <?php foreach ($product as $key => $data) { ?>
+                    <td class="data-grid-td"><?= $product[$key] ?></td>
+                <?php } ?>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+</div>

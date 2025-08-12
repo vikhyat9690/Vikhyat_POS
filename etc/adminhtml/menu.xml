@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Vikhyat_BlogManager::manager" title="Blog Manager" module="Vikhyat_BlogManager" sortOrder="10" resource="Vikhyat_BlogManager::manager" 
+        />
+        <add 
+        id="Vikhyat_BlogManager::index" 
+        title="Blogs" 
+        module="Vikhyat_BlogManager" 
+        sortOrder="10" 
+        parent="Vikhyat_BlogManager::manager" 
+        action="blogmanager/blog/index" 
+        resource="Vikhyat_BlogManager::index"
+        />
+        <add 
+        id="Vikhyat_BlogManager::newaction" 
+        title="Create Blog" 
+        module="Vikhyat_BlogManager" 
+        sortOrder="20" 
+        parent="Vikhyat_BlogManager::manager" 
+        action="blogmanager/blog/newaction" 
+        resource="Vikhyat_BlogManager::newaction"
+        />
+
+        <add id="Vikhyat_BlogManager::outlet_info" title="Outlet Manager"
+        module="Vikhyat_BlogManager" sortOrder="12" resource="Vikhyat_BlogManager::outlet_info"
+        />
+
+        <add 
+        id="Vikhyat_BlogManager::outletlist"
+        title="Outlet List"
+        module="Vikhyat_BlogManager"
+        sortOrder="10"
+        parent="Vikhyat_BlogManager::outlet_info"
+        action="blogmanager/outlet/index"
+        resource="Vikhyat_BlogManager::outletlist"
+        />
+
+        <add 
+        id="Vikhyat_BlogManager::editoutlet"
+        title="Edit Outlet"
+        module="Vikhyat_BlogManager"
+        sortOrder="20"
+        parent="Vikhyat_BlogManager::outlet_info"
+        action="blogmanager/outlet/edit"
+        resource="Vikhyat_BlogManager::editoutlet"
+        />
+
+        <add 
+        id="Vikhyat_BlogManager::managecashier"
+        title="Manage Cashier"
+        module="Vikhyat_BlogManager"
+        sortOrder="30"
+        parent="Vikhyat_BlogManager::outlet_info"
+        action="blogmanager/cashier/index"
+        resource="Vikhyat_BlogManager::managecashier"
+        />
+    </menu>
+</config>

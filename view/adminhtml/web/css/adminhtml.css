@@ -1,0 +1,7 @@
+.admin__menu .level-0.item-manager > a:before {
+    content: url('../images/logo.svg');
+    height: auto;
+}
+li#menu-vikhyat_extension-manager > a > span {
+    display: none;
+}
