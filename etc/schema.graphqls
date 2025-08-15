@@ -1,5 +1,7 @@
 type Query {
     getOutletConfigData(id: Int!): OutletConfigData @resolver(class: "Vikhyat\\BlogManager\\Model\\Resolver\\Outlet\\OutletConfigData")
+
+    cashierLogin(email: String!, password: String!): CashierData @resolver(class: "Vikhyat\\BlogManager\\Model\\Resolver\\CashierLogin")
 }
 
 type OutletConfigData {
@@ -15,4 +17,16 @@ type OutletConfigData {
     is_active: Int
     website_id: Int
     created_at: String
+}
+
+type CashierData {
+    id: Int,
+    firstname: String,
+    lastname: String,
+    email: String,
+    telephone: String,
+    outlet: Int,
+    cashier_image: String,
+    is_active: Int,
+    token: String
 }
