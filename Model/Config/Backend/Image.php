@@ -1,0 +1,40 @@
+<?php
+
+namespace Vikhyat\BlogManager\Model\Config\Backend;
+
+use Magento\Config\Model\Config\Backend\Image as BackendImage;
+
+class Image extends BackendImage
+{
+    const UPLOAD_DIR = 'blogmanager/logo';
+
+    /**
+     * Return path to directory for upload
+     *
+     * @return string
+     */
+    protected function _getUploadDir()
+    {
+        return $this->_mediaDirectory->getAbsolutePath(self::UPLOAD_DIR);
+    }
+
+    /**
+     * Make sure scope info (website/store) is added
+     *
+     * @return bool
+     */
+    protected function _addWhetherScopeInfo()
+    {
+        return true;
+    }
+
+    /**
+     * Allowed extensions
+     *
+     * @return string[]
+     */
+    protected function _getAllowedExtensions()
+    {
+        return ['jpg', 'jpeg', 'gif', 'png', 'svg'];
+    }
+}
