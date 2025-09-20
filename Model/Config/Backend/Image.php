@@ -6,12 +6,10 @@ use Magento\Config\Model\Config\Backend\Image as BackendImage;
 
 class Image extends BackendImage
 {
-    const UPLOAD_DIR = 'blogmanager/logo';
+    const UPLOAD_DIR = 'blogmanager/logo/';
 
     /**
-     * Return path to directory for upload
-     *
-     * @return string
+     * Return path to directory for upload (absolute path)
      */
     protected function _getUploadDir()
     {
@@ -19,22 +17,36 @@ class Image extends BackendImage
     }
 
     /**
-     * Make sure scope info (website/store) is added
-     *
-     * @return bool
+     * Relative upload dir for URL building
+     */
+    protected function _getUploadDirRelative()
+    {
+        return self::UPLOAD_DIR;
+    }
+
+    /**
+     * Don’t add scope info
      */
     protected function _addWhetherScopeInfo()
     {
-        return true;
+        return false;
     }
 
     /**
      * Allowed extensions
-     *
-     * @return string[]
      */
     protected function _getAllowedExtensions()
     {
         return ['jpg', 'jpeg', 'gif', 'png', 'svg'];
+    }
+
+    /**
+     * Return base URL for displaying image in admin
+     */
+    protected function _getBaseUrl()
+    {
+        return $this->_storeManager->getStore()
+            ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA)
+            . $this->_getUploadDirRelative() . '/';
     }
 }
