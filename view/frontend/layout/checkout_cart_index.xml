@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="checkout.cart.totals">
+            <block class="Magento\Checkout\Block\Cart\Totals" name="global_charge" before="grand_total">
+                <arguments>
+                    <argument name="template" xsi:type="string">Vikhyat_BlogManager::cart/totals/global_charge.phtml</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

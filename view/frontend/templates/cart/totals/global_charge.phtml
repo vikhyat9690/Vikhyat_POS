@@ -1,0 +1,12 @@
+<?php
+$quote = $block->getQuote();
+$amount = $quote->getData('global_charge');
+?>
+<?php if ($amount): ?>
+<tr class="totals global-charge">
+    <th class="mark" scope="row"><?= $block->escapeHtml(__('Global Charge')) ?></th>
+    <td class="amount">
+        <span class="price"><?= $block->formatPrice($amount) ?></span>
+    </td>
+</tr>
+<?php endif; ?>

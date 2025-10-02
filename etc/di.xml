@@ -14,11 +14,28 @@
         </arguments>
     </virtualType>
 
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="loyalty_listing_data_source" xsi:type="string">
+                    Vikhyat\BlogManager\Model\ResourceModel\Blog\Loyalty\Collection
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Vikhyat\BlogManager\Model\ResourceModel\Loyalty\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">vikhyat_loyalty_points</argument>
+            <argument name="resourceModel" xsi:type="string">Vikhyat\BlogManager\Model\ResourceModel\Loyalty</argument>
+        </arguments>
+    </virtualType>
+
     <!-- Link the virtualType with the UI component data source -->
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>
             <argument name="collections" xsi:type="array">
-                <item name="blogmanager_blog_listing_data_source" xsi:type="string">
+                <item name="loyalty_listing_data_source" xsi:type="string">
                     Vikhyat\BlogManager\Model\ResourceModel\Blog\Grid\Collection
                 </item>
             </argument>

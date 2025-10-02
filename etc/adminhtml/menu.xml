@@ -55,5 +55,22 @@
         action="blogmanager/cashier/index"
         resource="Vikhyat_BlogManager::managecashier"
         />
+
+        <add id="Vikhyat_BlogManager::loyalty_info" 
+        title="Loyalty Rule"
+        module="Vikhyat_BlogManager" 
+        sortOrder="40" parent="Vikhyat_BlogManager::outlet_info" 
+        resource="Vikhyat_BlogManager::loyalty_info"
+        />
+
+        <add 
+        id="Vikhyat_BlogManager::loyaltyindex"
+        title="Manage Loyalty Rules"
+        module="Vikhyat_BlogManager"
+        sortOrder="10"
+        parent="Vikhyat_BlogManager::loyalty_info"
+        action="blogmanager/loyalty/index"
+        resource="Vikhyat_BlogManager::loyaltyindex"
+        />
     </menu>
 </config>
